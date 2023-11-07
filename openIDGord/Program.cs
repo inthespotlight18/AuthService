@@ -6,18 +6,24 @@ namespace openIDGord
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Console.WriteLine("AuthService started:");
 
+            var graphAuth = new graphAuth();
             var googleAuth = new googleAuth();
 
-            var s = googleAuth.ServiceTest();
+            Console.WriteLine(graphAuth.AuthLogin());
+            var r = await AuthModelLib.googleAuth.AuthLoginTest();
+            Console.WriteLine(r);      
+            
+            Console.WriteLine(googleAuth.ServiceTest());            
+            Console.WriteLine(graphAuth.ServiceTest());
 
-            Console.WriteLine(s);
 
-            await Auth.AuthTokenCSCAsync();
+
+            //await Auth.AuthTokenCSCAsync();
+            Console.WriteLine("AuthService finished...");
+            Console.ReadLine();
+
         }
     }
 }
-
-//Console.WriteLine("Hello, World!");
-//await Auth.AuthTokenCSCAsync();

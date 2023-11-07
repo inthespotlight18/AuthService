@@ -1,7 +1,7 @@
 ﻿namespace AuthModelLib
 {         
 
-        public interface gAuth
+        public interface iGAuth
         {
             string AuthLogin();
             string ServiceTest();

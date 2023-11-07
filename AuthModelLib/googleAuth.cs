@@ -8,16 +8,18 @@ using System.Threading;
 
 namespace AuthModelLib 
 {
-    public class googleAuth : gAuth
+    public class googleAuth : iGAuth
     {
         /*  GS
          *  
-         *  private static string clientId = "1016139361797-pt8scol5cahrsh81a7q594c24bt8unia.apps.googleusercontent.com";
-            private static string secret = "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";
-         */
+         */ private static string clientId = "532374526064-uorsuiai1d4nvtsr8fr01h5keubolqjs.apps.googleusercontent.com";
+            private static string secret = "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";
+         /*/
         /*  DZ
          */
-            private static string clientId = "295625733783-5hb28gq3u12meu8lkf2tefv385b8pio9.apps.googleusercontent.com";
+
+        /*
+        private static string clientId = "295625733783-5hb28gq3u12meu8lkf2tefv385b8pio9.apps.googleusercontent.com";
              private static string secret = "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";
         // */
 
@@ -29,6 +31,7 @@ namespace AuthModelLib
 
         public string AuthLogin()
         {
+
             var credentials = GoogleWebAuthorizationBroker.AuthorizeAsync(
                new ClientSecrets
                {
@@ -45,15 +48,59 @@ namespace AuthModelLib
                 HttpClientInitializer = credentials
             });
 
-            var profile = service.Users.GetProfile("dzlenko0922@gmail.com").Execute();
+            var profile = service.Users.GetProfile("tugit@fity.ca").Execute();
             Console.WriteLine(profile.MessagesTotal);
 
             Console.ReadLine();
 
-            string funcName = "AuthLogin : ";
+            string funcName = "google->AuthLogin : ";
 
             return (profile != null) ? funcName + "OK" : "FAIL|error";
         }
+
+
+        public static async Task<string> AuthLoginTest()
+        {
+            try
+            {
+                var credentials = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                   new ClientSecrets
+                   {
+                       ClientId = clientId,
+                       ClientSecret = secret,
+                   },
+                   scopes, "user", CancellationToken.None).Result;
+                Console.WriteLine("AuthLoginTest : c[{0}]", credentials.Token.IssuedUtc.ToString());
+                Console.ReadLine();
+
+                if (credentials.Token.IsExpired(SystemClock.Default))
+                    credentials.RefreshTokenAsync(CancellationToken.None).Wait();
+
+                var service = new GmailService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credentials
+                });
+
+                var profile = service.Users.GetProfile("tugit@fity.ca").Execute();
+                Console.WriteLine(profile.MessagesTotal);
+
+                Console.ReadLine();
+
+                string funcName = "TESTING google->AuthLogin : ";
+
+                string st = (profile != null) ? funcName + "OK" : "FAIL|error";
+
+                Console.WriteLine(funcName + st);
+                //Console.WriteLine("OK");
+                return "OK";
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine(("FAIL|{0}]", ex.Message);
+                return string.Format("FAIL|{0}]", ex.Message);
+            }
+        }
+
 
         public string ServiceTest()
         {
