@@ -16,23 +16,7 @@ public class graphAuth : iGAuth
         "https://graph.microsoft.com/.default"
     };
 
-    public static async Task AuthTokenCSCAsync()
-    {
-        var options = new ClientSecretCredentialOptions
-        {
-            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-        };
-        var csc = new ClientSecretCredential(tenantId, clientId, secret, options);
-        Console.WriteLine("AuthToken : csc[{0}]", csc.GetToken);
-        var v = csc.GetToken;
-        var gsc = new GraphServiceClient(csc, _scopes);
-        var users = await gsc.Users.GetAsync();
-        Console.WriteLine("AuthTokenCSCAsync : user.count[{0}]", users.Value.Count);
-
-        Console.ReadLine();
-    }
-
-    public string AuthLogin()
+    public async Task<string> AuthLogin()
     {
         var options = new ClientSecretCredentialOptions
         {
@@ -43,13 +27,18 @@ public class graphAuth : iGAuth
         var v = csc.GetToken;
         var gsc = new GraphServiceClient(csc, _scopes);
 
-        //var users = await gsc.Users.GetAsync();
+        //var users = gsc.Users.GetAsync();
         //Console.WriteLine("AuthTokenCSCAsync : user.count[{0}]", users.Value.Count);
 
 
         string funcName = "graphAuth->AuthLogin: ";
 
         return (gsc != null) ? (funcName + "OK") : (funcName + "FAIL");
+    }
+
+    public Task GetProfile()
+    {
+        throw new NotImplementedException();
     }
 
     public string ServiceTest()

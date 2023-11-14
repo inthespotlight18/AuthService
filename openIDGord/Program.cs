@@ -10,17 +10,20 @@ namespace openIDGord
 
             var graphAuth = new graphAuth();
             var googleAuth = new googleAuth();
+            var RingCentralAuth = new RingCentralAuth();
 
-            Console.WriteLine(graphAuth.AuthLogin());
-            var r = await AuthModelLib.googleAuth.AuthLoginTest();
-            Console.WriteLine(r);      
+            await graphAuth.AuthLogin();
+            await googleAuth.AuthLogin();
+
+            await RingCentralAuth.test();
+                  
             
             Console.WriteLine(googleAuth.ServiceTest());            
             Console.WriteLine(graphAuth.ServiceTest());
 
 
 
-            //await Auth.AuthTokenCSCAsync();
+
             Console.WriteLine("AuthService finished...");
             Console.ReadLine();
 

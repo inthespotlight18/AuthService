@@ -3,8 +3,9 @@
 
         public interface iGAuth
         {
-            string AuthLogin();
+            Task<string> AuthLogin();
             string ServiceTest();
+            Task GetProfile();
 
         }
     

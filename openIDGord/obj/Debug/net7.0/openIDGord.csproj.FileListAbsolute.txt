@@ -108,3 +108,7 @@ C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\obj\Debug\net7.0\ref
 C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\obj\Debug\net7.0\openIDGord.pdb
 C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\obj\Debug\net7.0\openIDGord.genruntimeconfig.cache
 C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\obj\Debug\net7.0\ref\openIDGord.dll
+C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\bin\Debug\net7.0\dotenv.net.dll
+C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\bin\Debug\net7.0\System.Net.Http.Formatting.dll
+C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+C:\Users\Harken\Documents\CSprojects\AuthService\openIDGord\bin\Debug\net7.0\RingCentral.Net.dll
