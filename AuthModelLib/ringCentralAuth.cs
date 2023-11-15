@@ -21,14 +21,12 @@ namespace AuthModelLib
         const string secret = "YxbUCO9tMYlaYAKv6DmgW7WSV3vWUihyJenFiARsXfBZ";
         const string uri = "https://platform.devtest.ringcentral.com";
 
-        public async Task test()
+        public async Task<string> AuthLogin()
         {
+            Console.WriteLine("RingCentralAuth->AuthLogin started: ");
             try
             {
-                DotEnv.Load();
-                // Instantiate the SDK
-                restClient = new RestClient(
-                    clientId, secret, uri, "DaniilAPP"); 
+                await GetProfile();
                 // Authenticate a user using a personal JWT token
                 await restClient.Authorize("eyJraWQiOiI4NzYyZjU5OGQwNTk0NGRiODZiZjVjYTk3ODA0NzYwOCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJhdWQiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tL3Jlc3RhcGkvb2F1dGgvdG9rZW4iLCJzdWIiOiI4NTI2NzAwMDUiLCJpc3MiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tIiwiZXhwIjoxNzMxNjI4Nzk5LCJpYXQiOjE2OTk5MDIwNDAsImp0aSI6IndqY3V2ei1qUVNDUkpRcEk2TW1RTWcifQ.edFJnw_Ff4b053xTJSvidW6yGTDMWzIWwI9W7fhHDpWjIeAwYbhmuVZG_ZCuKe-eZQ4xlXXOPDolxbd7I1ZSHeTJcHFOL9bx-ixjRXTlxwvGVZFdFInyLNx9GLvRZ-qAsZe5V8bLo-dpEqgHcfeWcJpD1BkThiV2oB6cMjMQ8kPIxsO8lJ1HKCoTllCklTp5VehW6nV6SdLyNFu5DqVB04y0VNpeMk6hx42p9nZRIFD8oyKKQ75JuwWBNW0NulBLIk5Kx-d7an8ong_YIdIZeWC5QZ2TGHBfSZgAHn_Kph-dLvB3ggWsnYjsV0UWpNjtwEuhjRUmjHnsUoJuDTpZcA");
 
@@ -38,11 +36,29 @@ namespace AuthModelLib
                 RECIPIENT = "12369713928";
 
                 await read_extension_phone_number_detect_sms_feature();
+
+                return "";
             }
             catch (Exception ex)
             {
                 Console.WriteLine("RingCentralAuth->test()");
                 Console.WriteLine("test()->: [{0}]", ex.Message) ;
+                return "";
+            }
+        }
+
+        public async Task GetProfile()
+        {
+            try
+            {
+                DotEnv.Load();
+                // Instantiate the SDK
+                restClient = new RestClient(
+                    clientId, secret, uri, "DaniilAPP");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("RingCentralAuth->GetProfile(): [{0}]", ex.Message);
             }
         }
 
@@ -79,7 +95,6 @@ namespace AuthModelLib
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("RingCentralAuth : read_extension_phone_number_detect_sms_feature()");
                 Console.WriteLine("read_extension_phone_number_detect_sms_feature()->: [{ 0}]", ex.Message);
             }
         }
@@ -113,7 +128,7 @@ namespace AuthModelLib
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("RingCentralAuth->send_sms(): [{0}]", ex.Message);
             }
         }
 
@@ -134,23 +149,17 @@ namespace AuthModelLib
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("RingCentralAuth->check_message_status(): [{0}]", ex.Message);
             }
         }
 
-        public Task<string> AuthLogin()
-        {
-            throw new NotImplementedException();
-        }
+
 
         public string ServiceTest()
         {
-            throw new NotImplementedException();
+            return "RingCentralAuth->ServiceTest()";
         }
 
-        public Task GetProfile()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

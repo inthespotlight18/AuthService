@@ -37,13 +37,12 @@ namespace AuthModelLib
                 var profile = service.Users.GetProfile("tugit@fity.ca").Execute();
                 Console.WriteLine(profile.MessagesTotal);
 
-                Console.ReadLine();
-
                 string funcName = "Result of google->AuthLogin : ";
-
                 string st = (profile != null) ? funcName + "SUCCESS" : "FAIL|error";
 
                 Console.WriteLine(funcName + st);
+
+                Console.ReadLine();
 
                 return "OK";
             }

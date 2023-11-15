@@ -10,12 +10,11 @@ namespace openIDGord
 
             var graphAuth = new graphAuth();
             var googleAuth = new googleAuth();
-            var RingCentralAuth = new RingCentralAuth();
+            var ringCentralAuth = new RingCentralAuth();
 
             await graphAuth.AuthLogin();
             await googleAuth.AuthLogin();
-
-            await RingCentralAuth.test();
+            await ringCentralAuth.AuthLogin();
                   
             
             Console.WriteLine(googleAuth.ServiceTest());            
