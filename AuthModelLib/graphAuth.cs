@@ -31,15 +31,14 @@ public class graphAuth : iGAuth
             //var users = gsc.Users.GetAsync();
             //Console.WriteLine("AuthTokenCSCAsync : user.count[{0}]", users.Value.Count);
 
-            string resultMesssage = "graphAuth->GetProfile() : ";
-            Console.WriteLine(resultMesssage + "OK");
-            return (gsc != null) ? (resultMesssage + "OK") : (resultMesssage + "FAIL");
+            Console.WriteLine("graphAuth->GetProfile() : OK");
+            return "OK" ;
         }
         catch (Exception ex)
         {
-            string resultMessage = "graphAuth->AuthLogin(): [" + ex.Message + "]";
-            Console.WriteLine(resultMessage);
-            return (resultMessage);
+            string exceptionMessage = "graphAuth->GetProfile(): [" + ex.Message + "]";
+            Console.WriteLine(exceptionMessage);
+            return "FAIL|error"; 
         }
         
     }
@@ -54,15 +53,14 @@ public class graphAuth : iGAuth
             };
             csc = new ClientSecretCredential(tenantId, clientId, secret, options);
 
-            string resultMesssage = "RingCentralAuth->AuthLogin(): OK";
-            Console.WriteLine(resultMesssage);
-            return resultMesssage;
+            Console.WriteLine("RingCentralAuth->AuthLogin(): OK");
+            return "OK";
         } 
         catch (Exception ex)
         {
-            string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]";
-            Console.WriteLine(resultMessage);
-            return resultMessage;
+            string exceptionMessage = "graphAuth->AuthLogin(): [" + ex.Message + "]";
+            Console.WriteLine(exceptionMessage);
+            return "FAIL|error";
         }
     }
 

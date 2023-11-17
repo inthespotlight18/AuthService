@@ -4,7 +4,6 @@
         public interface iGAuth
         {
             Task<string> AuthLogin();
-            string ServiceTest();
             Task<string> GetProfile();
 
             Task<string> SendSMS(string receiverNumber, string message);

@@ -20,11 +20,12 @@ namespace AuthModelLib
         {
             try
             {
+                Console.WriteLine("googleAuth->GetProfile started");
                 await AuthLogin();
                 Console.ReadLine();
 
                 //==============================================================
-                Console.WriteLine("googleAuth->GetProfile started");
+                
 
                 if (_credentials.Token.IsExpired(SystemClock.Default))
                     _credentials.RefreshTokenAsync(CancellationToken.None).Wait();
@@ -35,22 +36,17 @@ namespace AuthModelLib
                 });
 
                 var profile = service.Users.GetProfile("tugit@fity.ca").Execute();
-                Console.WriteLine(profile.MessagesTotal);
-
-                string funcName = "Result of google->GetProfile : ";
-                string st = (profile != null) ? funcName + "OK" : "FAIL|error";
-
-                Console.WriteLine(funcName + st);
-
+                Console.WriteLine(profile.MessagesTotal);          
+                Console.WriteLine("google->GetProfile : finished");
                 Console.ReadLine();
 
-                return st;
+                return "OK";
             }
             catch (Exception ex)
             {
-                string resultMessage = "googleAuth->GetProfile(): [" + ex.Message + "]";
-                Console.WriteLine(resultMessage);
-                return resultMessage;
+                string exceptionMessage = "googleAuth->GetProfile(): [" + ex.Message + "]";
+                Console.WriteLine(exceptionMessage);
+                return "FAIL|error";
             }
         }
 
@@ -68,17 +64,16 @@ namespace AuthModelLib
                scopes, "testClientGS", CancellationToken.None).Result;
                 //Console.WriteLine("googleAuth->AuthLoginTest : c[{0}]", credentials.Token.IssuedUtc.ToString());
 
-                string resultMessage = "googleAuth->AuthLoginTest : OK";
-                Console.WriteLine(resultMessage);
+                Console.WriteLine("googleAuth->AuthLoginTest : finished");
 
                 _credentials = credentials;
-                return resultMessage;
+                return "OK";
             } 
             catch (Exception ex) 
             {
-                string resultMessage = "googleAuth->AuthLogin(): [" + ex.Message + "]";
-                Console.WriteLine(resultMessage);
-                return resultMessage;
+                string exceptionMessage = "googleAuth->AuthLogin(): [" + ex.Message + "]";
+                Console.WriteLine(exceptionMessage);
+                return "FAIL|error"; 
             }
             
         }

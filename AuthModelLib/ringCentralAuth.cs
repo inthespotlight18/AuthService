@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RingCentral;
 
-using System;
-using System.Threading.Tasks;
-using RingCentral;
-using dotenv.net;
-using AuthModelLib;
 
 namespace AuthModelLib
 {
@@ -30,12 +21,11 @@ namespace AuthModelLib
 
         public async Task<string> GetProfile()
         {
-            Console.WriteLine("RingCentralAuth->AuthLogin started: ");
+            Console.WriteLine("RingCentralAuth->GetProfile started: ");
             try
             {
                 await AuthLogin();
-                // Authenticate a user using a personal JWT token
-                await restClient.Authorize("eyJraWQiOiI4NzYyZjU5OGQwNTk0NGRiODZiZjVjYTk3ODA0NzYwOCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJhdWQiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tL3Jlc3RhcGkvb2F1dGgvdG9rZW4iLCJzdWIiOiI4NTI2NzAwMDUiLCJpc3MiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tIiwiZXhwIjoxNzMxNjI4Nzk5LCJpYXQiOjE2OTk5MDIwNDAsImp0aSI6IndqY3V2ei1qUVNDUkpRcEk2TW1RTWcifQ.edFJnw_Ff4b053xTJSvidW6yGTDMWzIWwI9W7fhHDpWjIeAwYbhmuVZG_ZCuKe-eZQ4xlXXOPDolxbd7I1ZSHeTJcHFOL9bx-ixjRXTlxwvGVZFdFInyLNx9GLvRZ-qAsZe5V8bLo-dpEqgHcfeWcJpD1BkThiV2oB6cMjMQ8kPIxsO8lJ1HKCoTllCklTp5VehW6nV6SdLyNFu5DqVB04y0VNpeMk6hx42p9nZRIFD8oyKKQ75JuwWBNW0NulBLIk5Kx-d7an8ong_YIdIZeWC5QZ2TGHBfSZgAHn_Kph-dLvB3ggWsnYjsV0UWpNjtwEuhjRUmjHnsUoJuDTpZcA");
+                
 
                 // For the purpose of testing the code, we put the SMS recipient number in the environment variable.
                 // Feel free to set the SMS recipient directly.
@@ -44,13 +34,14 @@ namespace AuthModelLib
 
                 await read_extension_phone_number_detect_sms_feature();
 
-                string resultMessage = "RingCentralAuth->GetProfile(): OK";
-                return resultMessage;
+                Console.WriteLine("RingCentralAuth->GetProfile(): OK");
+                return "OK";
             }
             catch (Exception ex)
             {
-                string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]";
-                return resultMessage;
+                string exceptionMessage = "RingCentralAuth->GetProfile(): [" + ex.Message + "]";
+                Console.WriteLine(exceptionMessage);
+                return "FAIL|error";
             }
         }
 
@@ -58,19 +49,23 @@ namespace AuthModelLib
         {
             try
             {
-                DotEnv.Load();
                 // Instantiate the SDK
                 restClient = new RestClient(
                     clientId, secret, uri, "DaniilAPP");
 
-                string resultMessage = "RingCentralAuth->AuthLogin() : OK";
-                return resultMessage;
+                // Authenticate a user using a personal JWT token
+                await restClient.Authorize("eyJraWQiOiI4NzYyZjU5OGQwNTk0NGRiODZiZjVjYTk3ODA0NzYwOCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJhdWQiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tL3Jlc3RhcGkvb2F1dGgvdG9rZW4iLCJzdWIiOiI4NTI2NzAwMDUiLCJpc3MiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tIiwiZXhwIjoxNzMxNjI4Nzk5LCJpYXQiOjE2OTk5MDIwNDAsImp0aSI6IndqY3V2ei1qUVNDUkpRcEk2TW1RTWcifQ.edFJnw_Ff4b053xTJSvidW6yGTDMWzIWwI9W7fhHDpWjIeAwYbhmuVZG_ZCuKe-eZQ4xlXXOPDolxbd7I1ZSHeTJcHFOL9bx-ixjRXTlxwvGVZFdFInyLNx9GLvRZ-qAsZe5V8bLo-dpEqgHcfeWcJpD1BkThiV2oB6cMjMQ8kPIxsO8lJ1HKCoTllCklTp5VehW6nV6SdLyNFu5DqVB04y0VNpeMk6hx42p9nZRIFD8oyKKQ75JuwWBNW0NulBLIk5Kx-d7an8ong_YIdIZeWC5QZ2TGHBfSZgAHn_Kph-dLvB3ggWsnYjsV0UWpNjtwEuhjRUmjHnsUoJuDTpZcA");
+
+
+                Console.WriteLine("RingCentralAuth->AuthLogin() : OK");
+                return "OK";
 
             }
             catch (Exception ex)
             {
-                string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]" ;
-                return resultMessage;
+                string exceptionMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]";
+                Console.WriteLine(exceptionMessage);
+                return "FAIL|error";
             }
         }
 
@@ -169,14 +164,15 @@ namespace AuthModelLib
                     Console.WriteLine("SMS sent. Message id: " + resp.id.ToString());
                     await check_message_status(resp.id.ToString());
 
-                    string resultMessage = "RingCentralAuth->SendSMS() : OK";
-                    return resultMessage;
+                    Console.WriteLine("RingCentralAuth->SendSMS() : OK");
+                    return "OK";
 
                 }
                 catch (Exception ex)
                 {
-                    string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]";
-                    return resultMessage;
+                    string exceptionMessage = "RingCentralAuth->SendSMS(): [" + ex.Message + "]";
+                    Console.WriteLine(exceptionMessage);
+                    return "FAIL|error";
                 }
             }
             else
