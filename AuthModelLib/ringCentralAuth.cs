@@ -15,18 +15,25 @@ namespace AuthModelLib
     public class RingCentralAuth : iGAuth
     {
         static string RECIPIENT;
-        static RestClient restClient;
+        static RestClient? restClient;
 
         const string clientId = "9Jj0p7Ph3dSdAlx8g9Tll2";
         const string secret = "YxbUCO9tMYlaYAKv6DmgW7WSV3vWUihyJenFiARsXfBZ";
         const string uri = "https://platform.devtest.ringcentral.com";
 
-        public async Task<string> AuthLogin()
+        private static string fromNumber;
+        //private static string fromNumber   // property
+        //{
+        //    get { return fromNumber; }
+        //    set { fromNumber = value; }
+        //}
+
+        public async Task<string> GetProfile()
         {
             Console.WriteLine("RingCentralAuth->AuthLogin started: ");
             try
             {
-                await GetProfile();
+                await AuthLogin();
                 // Authenticate a user using a personal JWT token
                 await restClient.Authorize("eyJraWQiOiI4NzYyZjU5OGQwNTk0NGRiODZiZjVjYTk3ODA0NzYwOCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJhdWQiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tL3Jlc3RhcGkvb2F1dGgvdG9rZW4iLCJzdWIiOiI4NTI2NzAwMDUiLCJpc3MiOiJodHRwczovL3BsYXRmb3JtLmRldnRlc3QucmluZ2NlbnRyYWwuY29tIiwiZXhwIjoxNzMxNjI4Nzk5LCJpYXQiOjE2OTk5MDIwNDAsImp0aSI6IndqY3V2ei1qUVNDUkpRcEk2TW1RTWcifQ.edFJnw_Ff4b053xTJSvidW6yGTDMWzIWwI9W7fhHDpWjIeAwYbhmuVZG_ZCuKe-eZQ4xlXXOPDolxbd7I1ZSHeTJcHFOL9bx-ixjRXTlxwvGVZFdFInyLNx9GLvRZ-qAsZe5V8bLo-dpEqgHcfeWcJpD1BkThiV2oB6cMjMQ8kPIxsO8lJ1HKCoTllCklTp5VehW6nV6SdLyNFu5DqVB04y0VNpeMk6hx42p9nZRIFD8oyKKQ75JuwWBNW0NulBLIk5Kx-d7an8ong_YIdIZeWC5QZ2TGHBfSZgAHn_Kph-dLvB3ggWsnYjsV0UWpNjtwEuhjRUmjHnsUoJuDTpZcA");
 
@@ -37,17 +44,17 @@ namespace AuthModelLib
 
                 await read_extension_phone_number_detect_sms_feature();
 
-                return "";
+                string resultMessage = "RingCentralAuth->GetProfile(): OK";
+                return resultMessage;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("RingCentralAuth->test()");
-                Console.WriteLine("test()->: [{0}]", ex.Message) ;
-                return "";
+                string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]";
+                return resultMessage;
             }
         }
 
-        public async Task GetProfile()
+        public async Task<string> AuthLogin()
         {
             try
             {
@@ -55,10 +62,15 @@ namespace AuthModelLib
                 // Instantiate the SDK
                 restClient = new RestClient(
                     clientId, secret, uri, "DaniilAPP");
+
+                string resultMessage = "RingCentralAuth->AuthLogin() : OK";
+                return resultMessage;
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine("RingCentralAuth->GetProfile(): [{0}]", ex.Message);
+                string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]" ;
+                return resultMessage;
             }
         }
 
@@ -79,7 +91,9 @@ namespace AuthModelLib
                         {
                             // If a user has multiple phone numbers, check and decide which number
                             // to be used for sending SMS message.
-                            await send_sms(record.phoneNumber);
+
+                            fromNumber = record.phoneNumber;
+                           
                             return;
                         }
                     }
@@ -96,39 +110,6 @@ namespace AuthModelLib
             catch (Exception ex)
             {
                 Console.WriteLine("read_extension_phone_number_detect_sms_feature()->: [{ 0}]", ex.Message);
-            }
-        }
-        /*
-         Send a text message from a user own phone number to a recipient number
-        */
-        static private async Task send_sms(string fromNumber)
-        {
-            try
-            {
-                var requestBody = new CreateSMSMessage();
-                requestBody.from = new MessageStoreCallerInfoRequest
-                {
-                    phoneNumber = fromNumber
-                };
-                requestBody.to = new MessageStoreCallerInfoRequest[] {
-                    new MessageStoreCallerInfoRequest { phoneNumber = RECIPIENT }
-                };
-                // To send group messaging, add more (max 10 recipients) 'phoneNumber' object. E.g.
-                /*
-                requestBody.to = new MessageStoreCallerInfoRequest[] {
-                  new MessageStoreCallerInfoRequest { phoneNumber = "Recipient_1_Number" },
-                  new MessageStoreCallerInfoRequest { phoneNumber = "Recipient_2_Number" }
-                };
-                */
-                requestBody.text = "Hello World!";
-
-                var resp = await restClient.Restapi().Account().Extension().Sms().Post(requestBody);
-                Console.WriteLine("SMS sent. Message id: " + resp.id.ToString());
-                await check_message_status(resp.id.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("RingCentralAuth->send_sms(): [{0}]", ex.Message);
             }
         }
 
@@ -153,13 +134,61 @@ namespace AuthModelLib
             }
         }
 
-
-
         public string ServiceTest()
         {
             return "RingCentralAuth->ServiceTest()";
         }
 
-        
+        public async Task<string> SendSMS(string receiverNumber, string message)
+        {
+            string res = await GetProfile();
+
+            if (res.Contains("OK"))
+            {
+                try
+                {
+                    var requestBody = new CreateSMSMessage();
+                    requestBody.from = new MessageStoreCallerInfoRequest
+                    {
+                        phoneNumber = fromNumber
+                    };
+                    requestBody.to = new MessageStoreCallerInfoRequest[] 
+                    {
+                        new MessageStoreCallerInfoRequest { phoneNumber = receiverNumber }
+                    };
+                    // To send group messaging, add more (max 10 recipients) 'phoneNumber' object. E.g.
+                    /*
+                    requestBody.to = new MessageStoreCallerInfoRequest[] {
+                      new MessageStoreCallerInfoRequest { phoneNumber = "Recipient_1_Number" },
+                      new MessageStoreCallerInfoRequest { phoneNumber = "Recipient_2_Number" }
+                    };
+                    */
+                    requestBody.text = message;
+
+                    var resp = await restClient.Restapi().Account().Extension().Sms().Post(requestBody);
+                    Console.WriteLine("SMS sent. Message id: " + resp.id.ToString());
+                    await check_message_status(resp.id.ToString());
+
+                    string resultMessage = "RingCentralAuth->SendSMS() : OK";
+                    return resultMessage;
+
+                }
+                catch (Exception ex)
+                {
+                    string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]";
+                    return resultMessage;
+                }
+            }
+            else
+            {
+                return "Couldn't load profile";
+            }
+                
+        }
+
+        public async Task<string> SendEmail(string adresantEmail, string subject, string body)
+        {
+            return "This functionality is not implemented in RingCentral class";
+        }
     }
 }

@@ -5,7 +5,11 @@
         {
             Task<string> AuthLogin();
             string ServiceTest();
-            Task GetProfile();
+            Task<string> GetProfile();
+
+            Task<string> SendSMS(string receiverNumber, string message);
+
+            Task<string> SendEmail(string adresantEmail, string subject, string body);
 
         }
     

@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Graph;
 using Azure.Identity;
+using Google.Apis.Auth.OAuth2;
 
 //https://stackoverflow.com/questions/75604903/delegateauthenticationprovider-not-found-after-updating-microsoft-graph
 //https://github.com/microsoftgraph/msgraph-sdk-dotnet/blob/feature/5.0/docs/upgrade-to-v5.md#authentication
@@ -19,31 +20,64 @@ public class graphAuth : iGAuth
         "https://graph.microsoft.com/.default"
     };
 
+    public async Task<string> GetProfile()
+    {
+        try
+        {
+            await AuthLogin();
+            var v = csc.GetToken;
+            var gsc = new GraphServiceClient(csc, _scopes);
+
+            //var users = gsc.Users.GetAsync();
+            //Console.WriteLine("AuthTokenCSCAsync : user.count[{0}]", users.Value.Count);
+
+            string resultMesssage = "graphAuth->GetProfile() : ";
+            Console.WriteLine(resultMesssage + "OK");
+            return (gsc != null) ? (resultMesssage + "OK") : (resultMesssage + "FAIL");
+        }
+        catch (Exception ex)
+        {
+            string resultMessage = "graphAuth->AuthLogin(): [" + ex.Message + "]";
+            Console.WriteLine(resultMessage);
+            return (resultMessage);
+        }
+        
+    }
+    
     public async Task<string> AuthLogin()
     {
-        await GetProfile();
-        var v = csc.GetToken;
-        var gsc = new GraphServiceClient(csc, _scopes);
-
-        //var users = gsc.Users.GetAsync();
-        //Console.WriteLine("AuthTokenCSCAsync : user.count[{0}]", users.Value.Count);
-
-        string funcName = "graphAuth->AuthLogin: ";
-
-        return (gsc != null) ? (funcName + "OK") : (funcName + "FAIL");
-    }
-
-    public async Task GetProfile()
-    {
-        var options = new ClientSecretCredentialOptions
+        try
         {
-            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-        };
-        csc = new ClientSecretCredential(tenantId, clientId, secret, options);
+            var options = new ClientSecretCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+            };
+            csc = new ClientSecretCredential(tenantId, clientId, secret, options);
+
+            string resultMesssage = "RingCentralAuth->AuthLogin(): OK";
+            Console.WriteLine(resultMesssage);
+            return resultMesssage;
+        } 
+        catch (Exception ex)
+        {
+            string resultMessage = "RingCentralAuth->AuthLogin(): [" + ex.Message + "]";
+            Console.WriteLine(resultMessage);
+            return resultMessage;
+        }
     }
 
     public string ServiceTest()
     {
-        return "graphAuth-> ServiceTest";
+        return "graphAuth-> ServiceTest() : OK";
+    }
+
+    public async Task<string> SendSMS(string receiverNumber, string message)
+    {
+        return "This functionality is not implemented in GraphAuth class";
+    }
+
+    public async Task<string> SendEmail(string adresantEmail, string subject, string body)
+    {
+        return "This functionality is not implemented in GraphAuth class";
     }
 }
