@@ -1,10 +1,12 @@
-﻿namespace AuthModelLib
+﻿using System.Data;
+
+namespace AuthModelLib
 {         
 
         public interface iGAuth
         {
             Task<string> AuthLogin();
-            Task<string> GetProfile();
+            Task<DataTable> GetProfile();
 
             Task<string> SendSMS(string receiverNumber, string message);
 

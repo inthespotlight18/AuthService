@@ -2,6 +2,10 @@
 using Microsoft.Graph;
 using Azure.Identity;
 using Google.Apis.Auth.OAuth2;
+using System.Data;
+using Google.Apis.Gmail.v1.Data;
+using Microsoft.Graph.Education.Classes.Item.Assignments.Item.Submissions.Item.Return;
+using System.Management;
 
 //https://stackoverflow.com/questions/75604903/delegateauthenticationprovider-not-found-after-updating-microsoft-graph
 //https://github.com/microsoftgraph/msgraph-sdk-dotnet/blob/feature/5.0/docs/upgrade-to-v5.md#authentication
@@ -20,29 +24,10 @@ public class graphAuth : iGAuth
         "https://graph.microsoft.com/.default"
     };
 
-    public async Task<string> GetProfile()
-    {
-        try
-        {
-            await AuthLogin();
-            var v = csc.GetToken;
-            var gsc = new GraphServiceClient(csc, _scopes);
+    /************************************************************************************************************************\
+    *                                                                                                                      *
+    \************************************************************************************************************************/   
 
-            //var users = gsc.Users.GetAsync();
-            //Console.WriteLine("AuthTokenCSCAsync : user.count[{0}]", users.Value.Count);
-
-            Console.WriteLine("graphAuth->GetProfile() : OK");
-            return "OK" ;
-        }
-        catch (Exception ex)
-        {
-            string exceptionMessage = "graphAuth->GetProfile(): [" + ex.Message + "]";
-            Console.WriteLine(exceptionMessage);
-            return "FAIL|error"; 
-        }
-        
-    }
-    
     public async Task<string> AuthLogin()
     {
         try
@@ -64,18 +49,98 @@ public class graphAuth : iGAuth
         }
     }
 
+    /************************************************************************************************************************\
+    *                                                                                                                      *
+    \************************************************************************************************************************/
+
+    public async Task<DataTable> GetProfile()
+    {
+        try
+        {
+            DataTable dt = new DataTable("OK");
+            var v = csc.GetToken;
+            var gsc = new GraphServiceClient(csc, _scopes);
+
+            var mg = gsc;
+            var mo = gsc.Me.GetAsync();
+            var uo = gsc.Users.GetAsync();
+
+            //var users = gsc.Users.GetAsync();
+            //Console.WriteLine("AuthTokenCSCAsync : user.count[{0}]", users.Value.Count);
+
+            Console.WriteLine("graphAuth->GetProfile() : OK");
+            return dt;
+        }
+        catch (Exception ex)
+        {
+            string exceptionMessage = "graphAuth->GetProfile(): [" + ex.Message + "]";
+            Console.WriteLine(exceptionMessage);
+            return new DataTable(string.Format("FAIL|{0}", ex.Message));
+        }
+
+    }
+
+    /************************************************************************************************************************\
+    *                                                                                                                      *
+    \************************************************************************************************************************/
+
+    public DataTable ProfileToDataTable(Profile profile)
+    {
+        DataTable? dataTable = new DataTable("ProfileDT");
+        dataTable.Columns.Add("ETag");
+        dataTable.Columns.Add("EmailAddress");
+        dataTable.Columns.Add("HistoryId");
+        dataTable.Columns.Add("MessagesTotal");
+        dataTable.Columns.Add("ThreadsTotal");
+        try
+        {
+            string etag = profile.ETag;
+            string email = profile.EmailAddress;
+            string historyId = profile.HistoryId.ToString();
+            string messagesTotal = profile.MessagesTotal.ToString();
+            string threadsTotal = profile.ThreadsTotal.ToString();
+
+            dataTable.Rows.Add(etag, email, historyId, messagesTotal, threadsTotal);
+
+            return dataTable;
+        }
+        catch (Exception ex)
+        {
+            string exceptionMessage = "googleAuth->Gords_convert(): [" + ex.Message + "]";
+            Console.WriteLine(exceptionMessage);
+            return dataTable;
+        }
+
+    }
+
+    /************************************************************************************************************************\
+    *                                                                                                                      *
+    \************************************************************************************************************************/
+
     public string ServiceTest()
     {
         return "graphAuth-> ServiceTest() : OK";
     }
+
+    /************************************************************************************************************************\
+    *                                                                                                                      *
+    \************************************************************************************************************************/
 
     public async Task<string> SendSMS(string receiverNumber, string message)
     {
         return "This functionality is not implemented in GraphAuth class";
     }
 
+    /************************************************************************************************************************\
+    *                                                                                                                      *
+    \************************************************************************************************************************/
+
     public async Task<string> SendEmail(string adresantEmail, string subject, string body)
     {
         return "This functionality is not implemented in GraphAuth class";
     }
+
+    /************************************************************************************************************************\
+    *                                                                                                                      *
+    \************************************************************************************************************************/
 }
