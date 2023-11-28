@@ -49,6 +49,10 @@
               "target": "Package",
               "version": "[1.10.3, )"
             },
+            "ChoETL": {
+              "target": "Package",
+              "version": "[1.2.1.64, )"
+            },
             "Google.Apis": {
               "target": "Package",
               "version": "[1.63.0, )"
@@ -72,6 +76,14 @@
             "Microsoft.Graph": {
               "target": "Package",
               "version": "[5.33.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Remote.Linq.Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[7.1.0, )"
             },
             "RingCentral.Net": {
               "target": "Package",

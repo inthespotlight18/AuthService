@@ -1,4 +1,5 @@
 ﻿using AuthModelLib;
+using System.Net;
 
 namespace openIDGord
 {
@@ -8,20 +9,25 @@ namespace openIDGord
         {
             Console.WriteLine("AuthService started:");
 
+            var SnipeITAuth = new SnipeITAuth();
             var graphAuth = new graphAuth();
             var googleAuth = new googleAuth();
             var ringCentralAuth = new RingCentralAuth();
 
-            //await graphAuth.AuthLogin();
+            await SnipeITAuth.AuthLogin();
             await googleAuth.AuthLogin();
             await graphAuth.AuthLogin();
             await ringCentralAuth.AuthLogin();
-            await ringCentralAuth.SendSMS("2369713928", "Daniil Zlenko sent that message from his C# program");
+
+
+           // await ringCentralAuth.SendSMS("2369713928", "Daniil Zlenko sent that message from his C# program");
 
            
             await googleAuth.GetProfile();
             await graphAuth.GetProfile();
             await ringCentralAuth.GetProfile();
+
+            await SnipeITAuth.GetProfile();
 
             Console.WriteLine(googleAuth.ServiceTest());            
             Console.WriteLine(graphAuth.ServiceTest());

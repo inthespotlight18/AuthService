@@ -64,9 +64,7 @@ namespace AuthModelLib
                 Console.WriteLine("googleAuth->GetProfile started");             
                 Console.ReadLine();
 
-                //==============================================================
-                
-              
+                //==============================================================           
                 if (_credentials.Token.IsExpired(SystemClock.Default))
                     _credentials.RefreshTokenAsync(CancellationToken.None).Wait();         
                 
@@ -78,26 +76,26 @@ namespace AuthModelLib
                 var profile = service.Users.GetProfile("tugit@fity.ca").Execute();
             
                 Console.WriteLine("Total gmails: " + profile.MessagesTotal);          
-                Console.WriteLine("google->GetProfile : finished");
                 Console.ReadLine();
 
-                //var opt = new JsonSerializerOptions() { WriteIndented = true };              
-                // Department dept = new Department() { DeptId = 101, DepartmentName = "IT" };
-                //string strJson = System.Text.Json.JsonSerializer.Serialize<Google.Apis.Gmail.v1.Data.Profile>(profile, opt);
-                //Console.WriteLine("+++++++++++++++++++++++++++");
-                //Console.WriteLine(strJson);         //{"EmailAddress":"tugit@fity.ca","HistoryId":2264,"MessagesTotal":8,"ThreadsTotal":8,"ETag":null}
-                //Console.WriteLine("+++++++++++++++++++++++++++");
-                //var dt = convertJSONtoDataTable(strJson);
+                var jsonResponse = System.Text.Json.JsonSerializer.Serialize<Google.Apis.Gmail.v1.Data.Profile>(profile);
 
-                DataTable? dataTable = ProfileToDataTable(profile);
-                return dataTable;
+                var dtResult = Helper.Tabulate(jsonResponse);
 
+                if (dtResult != null) return dtResult;
+
+                return new DataTable(string.Format("FAIL|error"));
+
+                //Console.WriteLine("+++++++++++++++++++++++++++");
+                //Console.WriteLine(jsonResponse);         //{"EmailAddress":"tugit@fity.ca","HistoryId":2264,"MessagesTotal":8,"ThreadsTotal":8,"ETag":null}
+                //Console.WriteLine("+++++++++++++++++++++++++++");
+   
             }
             catch (Exception ex)
             {
                 string exceptionMessage = "googleAuth->GetProfile(): [" + ex.Message + "]";
                 Console.WriteLine(exceptionMessage);
-                return null;
+                return new DataTable(string.Format("FAIL|{0}", ex.Message));
             }
         }
 

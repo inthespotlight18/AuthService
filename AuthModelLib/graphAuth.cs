@@ -80,38 +80,7 @@ public class graphAuth : iGAuth
 
     }
 
-    /************************************************************************************************************************\
-    *                                                                                                                      *
-    \************************************************************************************************************************/
 
-    public DataTable ProfileToDataTable(Profile profile)
-    {
-        DataTable? dataTable = new DataTable("ProfileDT");
-        dataTable.Columns.Add("ETag");
-        dataTable.Columns.Add("EmailAddress");
-        dataTable.Columns.Add("HistoryId");
-        dataTable.Columns.Add("MessagesTotal");
-        dataTable.Columns.Add("ThreadsTotal");
-        try
-        {
-            string etag = profile.ETag;
-            string email = profile.EmailAddress;
-            string historyId = profile.HistoryId.ToString();
-            string messagesTotal = profile.MessagesTotal.ToString();
-            string threadsTotal = profile.ThreadsTotal.ToString();
-
-            dataTable.Rows.Add(etag, email, historyId, messagesTotal, threadsTotal);
-
-            return dataTable;
-        }
-        catch (Exception ex)
-        {
-            string exceptionMessage = "googleAuth->Gords_convert(): [" + ex.Message + "]";
-            Console.WriteLine(exceptionMessage);
-            return dataTable;
-        }
-
-    }
 
     /************************************************************************************************************************\
     *                                                                                                                      *
