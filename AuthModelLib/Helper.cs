@@ -21,14 +21,9 @@ namespace AuthModelLib
                 var srcArray = jsonLinq.Descendants().Where(d => d is JArray).FirstOrDefault();
 
                 if (srcArray == null)
-                {
                     srcArray = new JArray();
-                    JValue text = new JValue("Manual text");
-                    // JValue date = new JValue(new DateTime(2000, 5, 23));
 
-                    //srcArray.Add(text);
-
-                }
+                
 
                 var trgArray = new JArray();
                 foreach (JObject row in srcArray.Children<JObject>())
